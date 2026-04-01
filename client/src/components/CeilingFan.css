@@ -1,0 +1,353 @@
+/* =====================================================
+   IMAGE-BASED CEILING FAN — CSS
+   Rotates an actual fan photo with realistic animation,
+   motion blur at high speed, and responsive controls.
+   ===================================================== */
+
+/* --- Section wrapper --- */
+.ceiling-fan-section {
+    background: linear-gradient(180deg, #f8f9fc 0%, #f0f2f7 50%, #f8f9fc 100%);
+    padding: 70px 16px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient glow behind fan */
+.ceiling-fan-section::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 65%);
+    pointer-events: none;
+}
+
+/* --- Section title --- */
+.fan-heading {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800;
+    color: #1e293b;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+}
+
+.fan-heading span {
+    background: linear-gradient(135deg, #007BFF, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.fan-subheading {
+    color: #64748b;
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 40px;
+    max-width: 480px;
+    line-height: 1.6;
+}
+
+/* =============================
+   FAN VISUAL ASSEMBLY
+   ============================= */
+.fan-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 36px;
+    position: relative;
+}
+
+/* --- Ceiling mount plate --- */
+.fan-mount {
+    width: 90px;
+    height: 16px;
+    background: linear-gradient(180deg, #a0aab8, #78849a 50%, #5b6678);
+    border-radius: 10px 10px 3px 3px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+    z-index: 5;
+}
+
+/* --- Down rod --- */
+.fan-rod {
+    width: 7px;
+    height: 60px;
+    background: linear-gradient(90deg, #8892a2, #c5cdd8 45%, #8892a2);
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.3);
+    z-index: 4;
+}
+
+/* --- Motor body --- */
+.fan-motor-body {
+    width: 80px;
+    height: 48px;
+    background: linear-gradient(180deg, #bcc5d3 0%, #8e99ab 25%, #6b7689 55%, #535e71 80%, #3d4757 100%);
+    border-radius: 50% / 60%;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.6),
+        inset 0 4px 8px rgba(255, 255, 255, 0.12),
+        inset 0 -6px 10px rgba(0, 0, 0, 0.25);
+    z-index: 5;
+    margin-bottom: -20px;
+}
+
+/* =============================
+   ROTATING IMAGE CONTAINER
+   ============================= */
+.fan-image-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The actual fan image — rotates */
+.fan-image {
+    width: clamp(260px, 55vw, 400px);
+    height: clamp(260px, 55vw, 400px);
+    object-fit: contain;
+    border-radius: 50%;
+    /* prevent image from looking jagged while spinning */
+    will-change: transform;
+    backface-visibility: hidden;
+    image-rendering: auto;
+}
+
+/* --- Rotation keyframe --- */
+@keyframes spinFan {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Speed: Slow */
+.fan-image-container.speed-slow .fan-image {
+    animation: spinFan 4s linear infinite;
+    filter: none;
+}
+
+/* Speed: Medium (default) */
+.fan-image-container.speed-medium .fan-image {
+    animation: spinFan 1.8s linear infinite;
+    filter: none;
+}
+
+/* Speed: Fast — add motion blur for realism */
+.fan-image-container.speed-fast .fan-image {
+    animation: spinFan 0.5s linear infinite;
+    filter: blur(1.2px);
+}
+
+/* Fan off — stop rotation */
+.fan-image-container.fan-off .fan-image {
+    animation: none;
+    filter: none;
+}
+
+/* Static center hub overlay — sits on top of spinning image */
+.fan-center-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    width: clamp(42px, 9vw, 64px);
+    height: clamp(42px, 9vw, 64px);
+    border-radius: 50%;
+    background: radial-gradient(circle at 42% 38%,
+            #e2e8f0 0%,
+            #b0b8c4 30%,
+            #78849a 65%,
+            #535e71 100%);
+    box-shadow:
+        0 0 0 4px #3d4757,
+        0 4px 18px rgba(0, 0, 0, 0.55),
+        inset 0 2px 5px rgba(255, 255, 255, 0.2),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Highlight dot on hub */
+.fan-center-hub::after {
+    content: '';
+    position: absolute;
+    top: 28%;
+    left: 34%;
+    width: 30%;
+    height: 25%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, transparent 80%);
+}
+
+/* --- Ground shadow --- */
+.fan-shadow {
+    width: clamp(180px, 44vw, 300px);
+    height: 16px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.45) 0%, transparent 70%);
+    border-radius: 50%;
+    margin-top: 28px;
+    filter: blur(5px);
+    transition: opacity 0.4s ease;
+}
+
+.fan-shadow.dim {
+    opacity: 0.15;
+}
+
+/* =============================
+   CONTROLS
+   ============================= */
+.fan-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+/* --- ON/OFF toggle row --- */
+.fan-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.fan-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    user-select: none;
+}
+
+/* Pill switch */
+.fan-switch {
+    width: 56px;
+    height: 30px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    border: 2px solid #94a3b8;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.35s, border-color 0.35s, box-shadow 0.35s;
+    outline: none;
+}
+
+.fan-switch:focus-visible {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+.fan-switch.on {
+    background: linear-gradient(135deg, #007BFF, #3b82f6);
+    border-color: #60a5fa;
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.35);
+}
+
+.fan-switch-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #d1d5db;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+}
+
+.fan-switch.on .fan-switch-knob {
+    transform: translateX(26px);
+    background: #ffffff;
+}
+
+/* --- Speed buttons --- */
+.fan-speed-row {
+    display: flex;
+    gap: 10px;
+}
+
+.fan-speed-btn {
+    padding: 9px 24px;
+    border: 2px solid #94a3b8;
+    border-radius: 999px;
+    background: transparent;
+    color: #475569;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.fan-speed-btn:focus-visible {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+.fan-speed-btn:hover:not(:disabled) {
+    border-color: #60a5fa;
+    color: #1e293b;
+    background: rgba(59, 130, 246, 0.08);
+}
+
+.fan-speed-btn.selected {
+    background: linear-gradient(135deg, #007BFF, #3b82f6);
+    border-color: #3b82f6;
+    color: #fff;
+    box-shadow: 0 0 22px rgba(0, 123, 255, 0.3);
+}
+
+.fan-speed-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+
+/* =============================
+   RESPONSIVE
+   ============================= */
+@media (max-width: 640px) {
+    .ceiling-fan-section {
+        padding: 48px 12px 36px;
+    }
+
+    .fan-subheading {
+        margin-bottom: 28px;
+        font-size: 0.92rem;
+    }
+
+    .fan-rod {
+        height: 40px;
+    }
+
+    .fan-motor-body {
+        width: 64px;
+        height: 38px;
+        margin-bottom: -16px;
+    }
+
+    .fan-mount {
+        width: 72px;
+        height: 13px;
+    }
+
+    .fan-speed-btn {
+        padding: 7px 16px;
+        font-size: 0.76rem;
+    }
+
+    .fan-shadow {
+        margin-top: 18px;
+    }
+}
