@@ -153,8 +153,26 @@ app.post('/api/customers/login', async (req, res) => {
 
         res.json({
             message: 'Login successful',
-            customer: { id: customer._id, name: customer.name, email: customer.email }
+            customer: { id: customer._id, name: customer.name, email: customer.email, cart: customer.cart || [] }
         });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// Update Customer Cart
+app.put('/api/customers/:id/cart', async (req, res) => {
+    try {
+        const { cart } = req.body;
+        const updated = await Customer.findByIdAndUpdate(
+            req.params.id,
+            { cart },
+            { new: true }
+        );
+        if (!updated) {
+            return res.status(404).json({ error: 'Customer not found' });
+        }
+        res.json({ message: 'Cart updated', cart: updated.cart });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -275,7 +293,7 @@ app.put('/api/coupons/:id', async (req, res) => {
 // Create a new order/bill
 app.post('/api/orders', async (req, res) => {
     try {
-        const { customerName, customerEmail, customerPhone, items, paymentMethod, couponCode, discount } = req.body;
+        const { customerName, customerEmail, customerPhone, message, items, paymentMethod, couponCode, discount } = req.body;
 
         // Calculate totals
         const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -285,7 +303,7 @@ app.post('/api/orders', async (req, res) => {
         const totalAmount = taxableAmount + gst;
 
         const order = new Order({
-            customerName, customerEmail, customerPhone,
+            customerName, customerEmail, customerPhone, message,
             items, subtotal, gst, totalAmount,
             paymentMethod: paymentMethod || 'cash',
             couponCode: couponCode || '',

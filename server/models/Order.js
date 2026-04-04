@@ -5,6 +5,7 @@ const orderSchema = new mongoose.Schema({
     customerName: { type: String, required: true },
     customerEmail: { type: String },
     customerPhone: { type: String, required: true },
+    message: { type: String, default: '' },
     items: [{
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
         name: { type: String, required: true },
@@ -22,14 +23,13 @@ const orderSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Auto-generate bill number before saving
-orderSchema.pre('save', async function (next) {
+orderSchema.pre('save', async function () {
     if (!this.billNumber) {
         const count = await mongoose.model('Order').countDocuments();
         const date = new Date();
         const prefix = `SV${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}`;
         this.billNumber = `${prefix}-${String(count + 1).padStart(4, '0')}`;
     }
-    next();
 });
 
 module.exports = mongoose.model('Order', orderSchema);

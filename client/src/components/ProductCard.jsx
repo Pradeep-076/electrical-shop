@@ -94,7 +94,7 @@ const ProductCard = ({ product, onInquire, onAddToCart }) => {
                                         className="px-4 py-3 bg-gray-900 text-white font-bold rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
                                     >
                                         <Info size={18} />
-                                        Inquire
+                                        Order
                                     </motion.button>
                                 </div>
                             </div>

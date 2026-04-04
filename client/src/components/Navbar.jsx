@@ -41,7 +41,9 @@ const Navbar = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('customer');
+        localStorage.removeItem('cart');
         setCustomer(null);
+        setCartCount(0);
     };
 
     const navLinks = [
@@ -120,8 +122,8 @@ const Navbar = () => {
                             )}
 
                             {/* Cart */}
-                            <Link to="/cart" className={`relative p-2 rounded-full hover:bg-white/20 transition-colors ${(scrolled || location.pathname !== '/') ? 'text-gray-700' : 'text-gray-200'}`}>
-                                <ShoppingCart size={20} />
+                            <Link to="/cart" className={`relative flex items-center justify-center p-2 rounded-full hover:bg-white/20 transition-colors ${(scrolled || location.pathname !== '/') ? 'text-gray-700' : 'text-gray-200'}`}>
+                                <ShoppingCart size={20} style={{transform: 'scaleY(1)'}} />
                                 {cartCount > 0 && (
                                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                                         {cartCount}
@@ -149,17 +151,13 @@ const Navbar = () => {
                                     Login
                                 </Link>
                             )}
-
-                            <Link to="/admin" className="px-4 py-2 rounded-full bg-electric text-white text-sm font-bold hover:bg-blue-600 transition-all shadow-lg hover:shadow-electric/50">
-                                Admin
-                            </Link>
                         </div>
                     </div>
 
                     {/* Mobile menu button */}
                     <div className="md:hidden flex items-center gap-2">
-                        <Link to="/cart" className={`relative p-2 ${(scrolled || location.pathname !== '/') ? 'text-gray-700' : 'text-white'}`}>
-                            <ShoppingCart size={20} />
+                        <Link to="/cart" className={`relative flex items-center justify-center p-2 ${(scrolled || location.pathname !== '/') ? 'text-gray-700' : 'text-white'}`}>
+                            <ShoppingCart size={20} style={{transform: 'scaleY(1)'}} />
                             {cartCount > 0 && (
                                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                                     {cartCount}

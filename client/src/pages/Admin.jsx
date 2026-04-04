@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Package, LogOut, Mail, ShoppingCart, Tag, ToggleLeft, ToggleRight, Send, Loader2, CreditCard, Banknote, Smartphone, IndianRupee } from 'lucide-react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Admin = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('adminAuthenticated') === 'true');
+    const navigate = useNavigate();
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [products, setProducts] = useState([]);
     const [inquiries, setInquiries] = useState([]);
@@ -22,6 +25,8 @@ const Admin = () => {
 
     const categories = ['Pipes', 'LED Lights', 'Bulbs', 'Switches', 'Wires', 'Appliances', 'Accessories'];
 
+
+
     useEffect(() => {
         if (isAuthenticated) {
             fetchProducts();
@@ -33,10 +38,11 @@ const Admin = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        if (password === 'admin123') {
+        if (email === 'admin@srivela.com' && password === 'srivelashop') {
+            localStorage.setItem('adminAuthenticated', 'true');
             setIsAuthenticated(true);
         } else {
-            alert('Invalid Password');
+            alert('Invalid Email or Password');
         }
     };
 
@@ -205,29 +211,7 @@ const Admin = () => {
     const totalRevenue = orders.filter(o => o.status !== 'cancelled').reduce((sum, o) => sum + o.totalAmount, 0);
 
     if (!isAuthenticated) {
-        return (
-            <div className="pt-24 min-h-screen bg-white flex items-center justify-center">
-                <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"
-                >
-                    <h1 className="text-2xl font-bold text-center mb-6">Admin Login</h1>
-                    <form onSubmit={handleLogin} className="space-y-4">
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Enter Password"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electric outline-none"
-                        />
-                        <button type="submit" className="w-full py-3 bg-electric text-white font-bold rounded-lg hover:bg-blue-600">
-                            Login
-                        </button>
-                    </form>
-                </motion.div>
-            </div>
-        );
+        return <Navigate to="/customer-login?tab=admin" replace />;
     }
 
     return (
@@ -235,7 +219,11 @@ const Admin = () => {
             <div className="max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-                    <button onClick={() => setIsAuthenticated(false)} className="flex items-center gap-2 text-red-500 hover:text-red-600 font-medium">
+                    <button onClick={() => {
+                        localStorage.removeItem('adminAuthenticated');
+                        setIsAuthenticated(false);
+                        navigate('/customer-login?tab=admin');
+                    }} className="flex items-center gap-2 text-red-500 hover:text-red-600 font-medium">
                         <LogOut size={20} /> Logout
                     </button>
                 </div>
@@ -286,7 +274,7 @@ const Admin = () => {
                         { id: 'products', label: 'Products' },
                         { id: 'orders', label: 'Orders / Bills' },
                         { id: 'coupons', label: 'Coupons' },
-                        { id: 'inquiries', label: 'Inquiries' }
+                        { id: 'inquiries', label: 'Messages' }
                     ].map(tab => (
                         <button
                             key={tab.id}
@@ -570,38 +558,41 @@ const Admin = () => {
                         </div>
                     </>
                 )}
-
-                {/* Inquiries Tab */}
+                {/* Messages Tab */}
                 {activeTab === 'inquiries' && (
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                        <table className="w-full text-left">
-                            <thead className="bg-gray-50 border-b border-gray-100">
-                                <tr>
-                                    <th className="p-4 font-semibold text-gray-600">ID</th>
-                                    <th className="p-4 font-semibold text-gray-600">Name</th>
-                                    <th className="p-4 font-semibold text-gray-600">Contact</th>
-                                    <th className="p-4 font-semibold text-gray-600">Message</th>
-                                    <th className="p-4 font-semibold text-gray-600">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {inquiries.map((inquiry) => (
-                                    <tr key={inquiry.id || inquiry._id} className="border-b border-gray-50 hover:bg-gray-50">
-                                        <td className="p-4 text-gray-500">#{inquiry.id || inquiry._id?.slice(-6)}</td>
-                                        <td className="p-4 font-medium">{inquiry.name}</td>
-                                        <td className="p-4 text-gray-500">
-                                            <div className="flex flex-col text-sm">
-                                                <span>{inquiry.phone}</span>
-                                                <span className="text-xs">{inquiry.email}</span>
-                                            </div>
-                                        </td>
-                                        <td className="p-4 text-gray-600 max-w-xs truncate" title={inquiry.message}>{inquiry.message}</td>
-                                        <td className="p-4 text-gray-500 text-sm">{new Date(inquiry.created_at || inquiry.createdAt).toLocaleDateString()}</td>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left">
+                                <thead className="bg-gray-50 border-b border-gray-100">
+                                    <tr>
+                                        <th className="p-4 font-semibold text-gray-600">Date</th>
+                                        <th className="p-4 font-semibold text-gray-600">Name</th>
+                                        <th className="p-4 font-semibold text-gray-600">Contact</th>
+                                        <th className="p-4 font-semibold text-gray-600">Message</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        {inquiries.length === 0 && <div className="p-8 text-center text-gray-500">No inquiries yet.</div>}
+                                </thead>
+                                <tbody>
+                                    {inquiries.map((inq) => (
+                                        <tr key={inq._id} className="border-b border-gray-50 hover:bg-gray-50">
+                                            <td className="p-4 text-gray-500 text-sm whitespace-nowrap">
+                                                {new Date(inq.createdAt).toLocaleDateString('en-IN')}
+                                            </td>
+                                            <td className="p-4 font-medium">{inq.name}</td>
+                                            <td className="p-4 text-sm text-gray-600">
+                                                <div className="flex flex-col">
+                                                    <span>{inq.email}</span>
+                                                    <span>{inq.phone}</span>
+                                                </div>
+                                            </td>
+                                            <td className="p-4 text-gray-700 min-w-[300px]">
+                                                {inq.message}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        {inquiries.length === 0 && <div className="p-8 text-center text-gray-500">No messages yet.</div>}
                     </div>
                 )}
             </div>

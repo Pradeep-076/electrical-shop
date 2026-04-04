@@ -5,7 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Cart = () => {
     const [cart, setCart] = useState([]);
-    const [customerForm, setCustomerForm] = useState({ name: '', phone: '', email: '' });
+    const [customerForm, setCustomerForm] = useState({ name: '', phone: '', email: '', message: '' });
+    const [customer, setCustomer] = useState(null);
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -24,15 +25,30 @@ const Cart = () => {
     useEffect(() => {
         const stored = JSON.parse(localStorage.getItem('cart') || '[]');
         setCart(stored);
-        const customer = JSON.parse(localStorage.getItem('customer') || 'null');
-        if (customer) {
-            setCustomerForm(prev => ({ ...prev, name: customer.name, email: customer.email }));
+        const customerData = JSON.parse(localStorage.getItem('customer') || 'null');
+        setCustomer(customerData);
+        if (customerData) {
+            setCustomerForm(prev => ({ 
+                ...prev, 
+                name: customerData.name || '', 
+                email: customerData.email || '',
+                phone: customerData.phone || ''
+            }));
         }
     }, []);
 
     const updateCart = (newCart) => {
         setCart(newCart);
         localStorage.setItem('cart', JSON.stringify(newCart));
+        
+        // Sync with server if logged in
+        if (customer) {
+            fetch(`http://localhost:5000/api/customers/${customer.id}/cart`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cart: newCart })
+            }).catch(err => console.error('Cart sync failed:', err));
+        }
     };
 
     const updateQty = (index, delta) => {
@@ -96,6 +112,10 @@ const Cart = () => {
     const handlePlaceOrder = async (e) => {
         e.preventDefault();
         if (cart.length === 0) return;
+        if (!customerForm.message.trim()) {
+            setError('Please enter a message');
+            return;
+        }
         setLoading(true);
         setError('');
 
@@ -107,6 +127,7 @@ const Cart = () => {
                     customerName: customerForm.name,
                     customerEmail: customerForm.email,
                     customerPhone: customerForm.phone,
+                    message: customerForm.message,
                     paymentMethod,
                     couponCode: couponApplied ? couponApplied.code : '',
                     discount: discount,
@@ -123,6 +144,15 @@ const Cart = () => {
                 setOrder(data.data);
                 localStorage.removeItem('cart');
                 setCart([]);
+                
+                // Clear server cart if logged in
+                if (customer) {
+                    fetch(`http://localhost:5000/api/customers/${customer.id}/cart`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ cart: [] })
+                    }).catch(err => console.error('Cart clear on order failed:', err));
+                }
             } else {
                 setError(data.error || 'Failed to place order');
             }
@@ -305,6 +335,7 @@ const Cart = () => {
                                     <p style={{ margin: '4px 0' }}><strong>Customer:</strong> {order.customerName}</p>
                                     <p style={{ margin: '4px 0' }}><strong>Phone:</strong> {order.customerPhone}</p>
                                     {order.customerEmail && <p style={{ margin: '4px 0' }}><strong>Email:</strong> {order.customerEmail}</p>}
+                                    {order.message && <p style={{ margin: '4px 0', color: '#666', fontStyle: 'italic' }}><strong>Message:</strong> {order.message}</p>}
                                 </div>
                             </div>
 
@@ -562,12 +593,19 @@ const Cart = () => {
                                         placeholder="Email (for invoice)"
                                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electric outline-none text-sm"
                                     />
+                                    <textarea
+                                        required
+                                        value={customerForm.message}
+                                        onChange={e => setCustomerForm({ ...customerForm, message: e.target.value })}
+                                        placeholder="Special requirements or message"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electric outline-none text-sm resize-none h-24"
+                                    />
                                     <button
                                         type="submit"
                                         disabled={loading}
                                         className="w-full py-3 bg-electric text-white font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-lg shadow-electric/30 disabled:opacity-50"
                                     >
-                                        {loading ? 'Placing Order...' : `Generate Bill — ₹${total}`}
+                                        {loading ? 'Placing Order...' : `Order the Product — ₹${total}`}
                                     </button>
                                 </form>
                             </div>
