@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import API from '../api';
 
 const CustomerLogin = () => {
     const [searchParams] = useSearchParams();
@@ -18,7 +19,7 @@ const CustomerLogin = () => {
         setLoading(true);
 
         try {
-            const res = await fetch('http://localhost:5000/api/customers/login', {
+            const res = await fetch(`${API}/api/customers/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: form.email, password: form.password })

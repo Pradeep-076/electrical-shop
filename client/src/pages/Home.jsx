@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Truck, Clock, Zap, Star, Search, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import API from '../api';
 
 
 const features = [
@@ -49,7 +50,7 @@ const Home = () => {
     const fetchFeaturedProducts = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/api/products');
+            const response = await fetch(`${API}/api/products`);
             const result = await response.json();
             if (result.data && result.data.length > 0) {
                 setFeaturedProducts(result.data.slice(0, 4));

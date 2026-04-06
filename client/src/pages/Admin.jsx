@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Package, LogOut, Mail, ShoppingCart, Tag, ToggleLeft, ToggleRight, Send, Loader2, CreditCard, Banknote, Smartphone, IndianRupee } from 'lucide-react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import API from '../api';
 
 const Admin = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('adminAuthenticated') === 'true');
@@ -49,7 +50,7 @@ const Admin = () => {
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:5000/api/products');
+            const res = await fetch(`${API}/api/products`);
             const data = await res.json();
             if (data.data) setProducts(data.data);
         } catch (err) {
@@ -61,7 +62,7 @@ const Admin = () => {
 
     const fetchInquiries = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/inquiries');
+            const res = await fetch(`${API}/api/inquiries`);
             const data = await res.json();
             if (data.data) setInquiries(data.data);
         } catch (err) {
@@ -71,7 +72,7 @@ const Admin = () => {
 
     const fetchOrders = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/orders');
+            const res = await fetch(`${API}/api/orders`);
             const data = await res.json();
             if (data.data) setOrders(data.data);
         } catch (err) {
@@ -81,7 +82,7 @@ const Admin = () => {
 
     const fetchCoupons = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/coupons');
+            const res = await fetch(`${API}/api/coupons`);
             const data = await res.json();
             if (data.data) setCoupons(data.data);
         } catch (err) {
@@ -91,7 +92,7 @@ const Admin = () => {
 
     const updateOrderStatus = async (id, status) => {
         try {
-            await fetch(`http://localhost:5000/api/orders/${id}`, {
+            await fetch(`${API}/api/orders/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status })
@@ -105,7 +106,7 @@ const Admin = () => {
     const handleSendEmail = async (orderId) => {
         setEmailSending(orderId);
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${orderId}/email`, {
+            const res = await fetch(`${API}/api/orders/${orderId}/email`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -126,7 +127,7 @@ const Admin = () => {
     const handleAddProduct = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:5000/api/products', {
+            const res = await fetch(`${API}/api/products`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newProduct)
@@ -144,7 +145,7 @@ const Admin = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
-                await fetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
+                await fetch(`${API}/api/products/${id}`, { method: 'DELETE' });
                 fetchProducts();
             } catch (err) {
                 console.error(err);
@@ -155,7 +156,7 @@ const Admin = () => {
     const handleAddCoupon = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:5000/api/coupons', {
+            const res = await fetch(`${API}/api/coupons`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -182,7 +183,7 @@ const Admin = () => {
     const handleDeleteCoupon = async (id) => {
         if (window.confirm('Delete this coupon?')) {
             try {
-                await fetch(`http://localhost:5000/api/coupons/${id}`, { method: 'DELETE' });
+                await fetch(`${API}/api/coupons/${id}`, { method: 'DELETE' });
                 fetchCoupons();
             } catch (err) {
                 console.error(err);
@@ -192,7 +193,7 @@ const Admin = () => {
 
     const toggleCouponActive = async (id, currentStatus) => {
         try {
-            await fetch(`http://localhost:5000/api/coupons/${id}`, {
+            await fetch(`${API}/api/coupons/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ isActive: !currentStatus })

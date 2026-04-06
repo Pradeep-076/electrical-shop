@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trash2, Plus, Minus, ShoppingBag, Printer, ArrowLeft, Download, Mail, Tag, CreditCard, Banknote, Smartphone, Check, X, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import API from '../api';
 
 const Cart = () => {
     const [cart, setCart] = useState([]);
@@ -43,7 +44,7 @@ const Cart = () => {
         
         // Sync with server if logged in
         if (customer) {
-            fetch(`http://localhost:5000/api/customers/${customer.id}/cart`, {
+            fetch(`${API}/api/customers/${customer.id}/cart`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ cart: newCart })
@@ -83,7 +84,7 @@ const Cart = () => {
         setCouponLoading(true);
         setCouponError('');
         try {
-            const res = await fetch('http://localhost:5000/api/coupons/validate', {
+            const res = await fetch(`${API}/api/coupons/validate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ code: couponCode, orderAmount: subtotal })
@@ -120,7 +121,7 @@ const Cart = () => {
         setError('');
 
         try {
-            const res = await fetch('http://localhost:5000/api/orders', {
+            const res = await fetch(`${API}/api/orders`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -147,7 +148,7 @@ const Cart = () => {
                 
                 // Clear server cart if logged in
                 if (customer) {
-                    fetch(`http://localhost:5000/api/customers/${customer.id}/cart`, {
+                    fetch(`${API}/api/customers/${customer.id}/cart`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ cart: [] })
@@ -225,7 +226,7 @@ const Cart = () => {
         }
         setEmailSending(true);
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${order._id}/email`, {
+            const res = await fetch(`${API}/api/orders/${order._id}/email`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             });

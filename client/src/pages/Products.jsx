@@ -3,6 +3,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, X, ShoppingCart } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
+import API from '../api';
 
 const categories = ['All', 'LED Lights', 'Fans', 'Appliances', 'Wires', 'Pipes', 'Accessories'];
 
@@ -57,7 +58,7 @@ const Products = () => {
             if (selectedCategory !== 'All') queryParams.append('category', selectedCategory);
             if (searchQuery) queryParams.append('search', searchQuery);
 
-            const response = await fetch(`http://localhost:5000/api/products?${queryParams.toString()}`);
+            const response = await fetch(`${API}/api/products?${queryParams.toString()}`);
             const result = await response.json();
 
             let productList = [];
@@ -111,7 +112,7 @@ const Products = () => {
         // Sync with server if logged in
         if (customerStr) {
             const customer = JSON.parse(customerStr);
-            fetch(`http://localhost:5000/api/customers/${customer.id}/cart`, {
+            fetch(`${API}/api/customers/${customer.id}/cart`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ cart })
@@ -135,7 +136,7 @@ const Products = () => {
     const handleInquirySubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:5000/api/inquiries', {
+            const res = await fetch(`${API}/api/inquiries`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

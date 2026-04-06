@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Package, ChevronDown, ChevronUp, ArrowLeft, Clock, CheckCircle, XCircle, Download, Printer, Mail, Loader2, ShoppingBag, LogIn } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import API from '../api';
 
 const OrderHistory = () => {
     const [orders, setOrders] = useState([]);
@@ -25,7 +26,7 @@ const OrderHistory = () => {
     const fetchOrders = async (email) => {
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/customer/${encodeURIComponent(email)}`);
+            const res = await fetch(`${API}/api/orders/customer/${encodeURIComponent(email)}`);
             const data = await res.json();
             if (data.data) setOrders(data.data);
         } catch (err) {
