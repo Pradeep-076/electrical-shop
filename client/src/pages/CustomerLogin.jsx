@@ -157,7 +157,7 @@ const CustomerLogin = () => {
                                 required
                                 value={adminForm.email}
                                 onChange={(e) => setAdminForm({ ...adminForm, email: e.target.value })}
-                                placeholder="srivelaelectricals@gmail.com"
+                                placeholder="user@gmail.com"
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electric outline-none transition-all"
                             />
                         </div>
