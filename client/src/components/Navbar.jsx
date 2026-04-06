@@ -3,6 +3,15 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Zap, ShoppingCart, ClipboardList, User, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const readLocalStorageJSON = (key, fallback) => {
+    try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+    } catch {
+        return fallback;
+    }
+};
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -12,11 +21,11 @@ const Navbar = () => {
 
     useEffect(() => {
         const updateCartCount = () => {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cart = readLocalStorageJSON('cart', []);
             setCartCount(cart.reduce((sum, item) => sum + item.quantity, 0));
         };
         const updateCustomer = () => {
-            const c = JSON.parse(localStorage.getItem('customer') || 'null');
+            const c = readLocalStorageJSON('customer', null);
             setCustomer(c);
         };
         updateCartCount();

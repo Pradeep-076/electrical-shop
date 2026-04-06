@@ -12,12 +12,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: "https://electrical-shop-nine.vercel.app"
+    origin: "https://electrical-shop-nine.vercel.app"
 }));
 app.use(express.json());
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB and then start server
+const startServer = async () => {
+    await connectDB();
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+};
 
 // Basic Route
 app.get('/', (req, res) => {
@@ -499,6 +504,4 @@ app.post('/api/orders/:id/email', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+startServer();
