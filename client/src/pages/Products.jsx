@@ -97,7 +97,7 @@ const Products = () => {
             navigate('/customer-login');
             return;
         }
-        
+
         // User is logged in - add to cart
         const cart = getCart();
         const existing = cart.find(item => item._id === product._id);
@@ -160,132 +160,132 @@ const Products = () => {
 
     return (
         <>
-        <div className="pt-24 min-h-screen bg-gold-50 pb-20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Header & Filter */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Our Products</h1>
-                        <p className="text-gray-500 mt-2">Browse our premium collection of electrical essentials.</p>
-                    </div>
+            <div className="pt-24 min-h-screen bg-gold-50 pb-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Header & Filter */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900">Our Products</h1>
+                            <p className="text-gray-500 mt-2">Browse our premium collection of electrical essentials.</p>
+                        </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                            <input
-                                type="text"
-                                placeholder="Search products..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-electric focus:border-transparent w-full sm:w-64"
-                            />
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <input
+                                    type="text"
+                                    placeholder="Search products..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-electric focus:border-transparent w-full sm:w-64"
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Categories Tabs */}
-                <div className="flex overflow-x-auto gap-2 mb-8 pb-4 no-scrollbar">
-                    {categories.map((cat) => (
-                        <button
-                            key={cat}
-                            onClick={() => setSelectedCategory(cat)}
-                            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedCategory === cat
-                                ? 'bg-electric text-white shadow-lg shadow-electric/30'
-                                : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
-                                }`}
-                        >
-                            {cat}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Product Grid */}
-                {loading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                            <div key={n} className="bg-white rounded-2xl h-80 animate-pulse border border-gray-100"></div>
+                    {/* Categories Tabs */}
+                    <div className="flex overflow-x-auto gap-2 mb-8 pb-4 no-scrollbar">
+                        {categories.map((cat) => (
+                            <button
+                                key={cat}
+                                onClick={() => setSelectedCategory(cat)}
+                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedCategory === cat
+                                    ? 'bg-electric text-white shadow-lg shadow-electric/30'
+                                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                                    }`}
+                            >
+                                {cat}
+                            </button>
                         ))}
                     </div>
-                ) : (
-                    <motion.div
-                        layout
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-                    >
-                        {products.map((product) => (
-                            <ProductCard key={product._id || product.id} product={product} onInquire={handleInquire} onAddToCart={handleAddToCart} />
-                        ))}
-                    </motion.div>
-                )}
 
-                {!loading && products.length === 0 && (
-                    <div className="text-center py-20">
-                        <div className="text-gray-400 mb-4">No products found</div>
-                        <button
-                            onClick={() => { setSelectedCategory('All'); setSearchQuery(''); }}
-                            className="text-electric font-medium hover:underline"
+                    {/* Product Grid */}
+                    {loading ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                                <div key={n} className="bg-white rounded-2xl h-80 animate-pulse border border-gray-100"></div>
+                            ))}
+                        </div>
+                    ) : (
+                        <motion.div
+                            layout
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
                         >
-                            Clear Filters
-                        </button>
+                            {products.map((product) => (
+                                <ProductCard key={product._id || product.id} product={product} onInquire={handleInquire} onAddToCart={handleAddToCart} />
+                            ))}
+                        </motion.div>
+                    )}
+
+                    {!loading && products.length === 0 && (
+                        <div className="text-center py-20">
+                            <div className="text-gray-400 mb-4">No products found</div>
+                            <button
+                                onClick={() => { setSelectedCategory('All'); setSearchQuery(''); }}
+                                className="text-electric font-medium hover:underline"
+                            >
+                                Clear Filters
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Inquiry Modal */}
+                {showInquiryModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="bg-white rounded-2xl max-w-md w-full p-8 relative shadow-2xl"
+                        >
+                            <button
+                                onClick={() => setShowInquiryModal(false)}
+                                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                            >
+                                <X size={24} />
+                            </button>
+                            <h2 className="text-2xl font-bold mb-2">Order Product</h2>
+                            <p className="text-gray-500 mb-6">Order <span className="font-semibold text-gray-900">{selectedProduct?.name}</span>?</p>
+
+                            <form onSubmit={handleInquirySubmit} className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                                    <input
+                                        type="text" required
+                                        value={inquiryForm.name}
+                                        onChange={e => setInquiryForm({ ...inquiryForm, name: e.target.value })}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electric focus:outline-none"
+                                        placeholder="John Doe"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                                    <input
+                                        type="tel" required
+                                        value={inquiryForm.phone}
+                                        onChange={e => setInquiryForm({ ...inquiryForm, phone: e.target.value })}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electric focus:outline-none"
+                                        placeholder="+91 90038 21871"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Message (Optional)</label>
+                                    <textarea
+                                        value={inquiryForm.message}
+                                        onChange={e => setInquiryForm({ ...inquiryForm, message: e.target.value })}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electric focus:outline-none"
+                                        rows="3"
+                                        placeholder="I need 50 pieces of this item..."
+                                    ></textarea>
+                                </div>
+                                <button className="w-full py-3 bg-electric text-white font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-lg shadow-electric/30">
+                                    Place Order
+                                </button>
+                            </form>
+                        </motion.div>
                     </div>
                 )}
             </div>
-
-            {/* Inquiry Modal */}
-            {showInquiryModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="bg-white rounded-2xl max-w-md w-full p-8 relative shadow-2xl"
-                    >
-                        <button
-                            onClick={() => setShowInquiryModal(false)}
-                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-                        >
-                            <X size={24} />
-                        </button>
-                        <h2 className="text-2xl font-bold mb-2">Order Product</h2>
-                        <p className="text-gray-500 mb-6">Order <span className="font-semibold text-gray-900">{selectedProduct?.name}</span>?</p>
-
-                        <form onSubmit={handleInquirySubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
-                                <input
-                                    type="text" required
-                                    value={inquiryForm.name}
-                                    onChange={e => setInquiryForm({ ...inquiryForm, name: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electric focus:outline-none"
-                                    placeholder="John Doe"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                                <input
-                                    type="tel" required
-                                    value={inquiryForm.phone}
-                                    onChange={e => setInquiryForm({ ...inquiryForm, phone: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electric focus:outline-none"
-                                    placeholder="+91 90038 21871"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Message (Optional)</label>
-                                <textarea
-                                    value={inquiryForm.message}
-                                    onChange={e => setInquiryForm({ ...inquiryForm, message: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-electric focus:outline-none"
-                                    rows="3"
-                                    placeholder="I need 50 pieces of this item..."
-                                ></textarea>
-                            </div>
-                            <button className="w-full py-3 bg-electric text-white font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-lg shadow-electric/30">
-                                Place Order
-                            </button>
-                        </form>
-                    </motion.div>
-                </div>
-            )}
-        </div>
 
             {/* Floating Cart Button */}
             {cartCount > 0 && (
@@ -307,3 +307,4 @@ const Products = () => {
 };
 
 export default Products;
+console.log("API URL:", API);
