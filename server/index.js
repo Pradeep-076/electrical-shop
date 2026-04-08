@@ -12,7 +12,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-    origin: "https://electrical-shop-nine.vercel.app"
+    origin: [
+        "https://electrical-shop-nine.vercel.app",
+        "https://www.srivela-electricals.in"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
 }));
 app.use(express.json());
 
